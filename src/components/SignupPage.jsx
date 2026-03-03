@@ -37,7 +37,7 @@ const SignupPage = () => {
         playsInline
         className="absolute inset-0 w-full h-full object-cover z-0"
       >
-        <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-form-of-blue-and-purple-colors-2330-large.mp4" type="video/mp4" />
+        <source src="/video/hero-home-bg.mp4" type="video/mp4" />
       </video>
 
       {/* Background Overlay */}
