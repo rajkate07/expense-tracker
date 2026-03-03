@@ -13,7 +13,7 @@ app.use(cors({
 app.use(bodyParser.json());
 
 // 2. DATABASE POOL (Handles timeouts automatically)
-const db = mysql.createPool({
+const dbConfig = {
     host: process.env.MYSQLHOST || 'localhost',
     user: process.env.MYSQLUSER || 'root',
     password: process.env.MYSQLPASSWORD || 'raj@2004',
@@ -22,9 +22,11 @@ const db = mysql.createPool({
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
-});
+};
 
-console.log('✅ MySQL Pool Created');
+console.log(`📡 Connecting to MySQL at ${dbConfig.host}:${dbConfig.port} using database: ${dbConfig.database}`);
+
+const db = mysql.createPool(dbConfig);
 
 // Logs for requests
 app.use((req, res, next) => {
