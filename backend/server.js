@@ -34,6 +34,33 @@ app.use((req, res, next) => {
 
 
 // 3. DATABASE INITIALIZATION (Ensures tables exist)
+db.query(`CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(50) DEFAULT 'user',
+    status VARCHAR(50) DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)`, (err) => {
+    if (err) console.error("Users table failed:", err);
+    else console.log("✅ Users table sync'd");
+});
+
+db.query(`CREATE TABLE IF NOT EXISTS transactions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    type ENUM('Income', 'Expense') NOT NULL,
+    amount DECIMAL(15, 2) NOT NULL,
+    category VARCHAR(100),
+    date DATE NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+)`, (err) => {
+    if (err) console.error("Transactions table failed:", err);
+    else console.log("✅ Transactions table sync'd");
+});
+
 db.query("CREATE TABLE IF NOT EXISTS categories (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100) NOT NULL UNIQUE, icon VARCHAR(100) DEFAULT 'ShoppingBag', color VARCHAR(100) DEFAULT '#3b82f6', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)", (err) => {
     if (err) console.error("Error creating categories table:", err);
     else {
