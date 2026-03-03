@@ -33,6 +33,7 @@ const Toast = ({ message, type, onClose }) => (
 export function TransactionProvider({ children }) {
   const [transactions, setTransactions] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true); // Re-added loading
   const { currentUser } = useAuth();
   const [toast, setToast] = useState(null);
 
@@ -84,8 +85,12 @@ export function TransactionProvider({ children }) {
   };
 
   useEffect(() => {
-    fetchTransactions();
-    fetchCategories();
+    const fetchData = async () => {
+      setLoading(true);
+      await Promise.all([fetchTransactions(), fetchCategories()]);
+      setLoading(false);
+    };
+    fetchData();
     const interval = setInterval(fetchTransactions, 15000); // Background refresh
     return () => clearInterval(interval);
   }, [currentUser]);
@@ -157,7 +162,7 @@ export function TransactionProvider({ children }) {
     categories, fetchCategories,
     newTransaction, handleInputChange,
     handleAddTransaction, deleteTransaction,
-    serverError
+    serverError, loading
   };
 
   return (

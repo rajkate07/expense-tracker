@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
       if (!contentType || !contentType.includes("application/json")) {
         const text = await response.text();
         console.error("Non-JSON response:", text);
-        throw new Error(`Server returned HTML instead of JSON. Check your VITE_API_URL. (Status: ${response.status})`);
+        throw new Error(`Connection Error: Server returned HTML but we expected JSON. Your VITE_API_URL (${API_URL}) might be wrong. Check if your backend is pointing to the frontend URL!`);
       }
 
       const data = await response.json();

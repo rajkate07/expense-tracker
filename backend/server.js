@@ -7,10 +7,15 @@ const app = express();
 
 // 1. ENABLE CORS (Allow Frontend to connect)
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: '*', // For development/testing, allow all. You can restrict this later to FRONTEND_URL
     credentials: true,
 }));
 app.use(bodyParser.json());
+
+// HELLO ROUTE (Health Check)
+app.get('/', (req, res) => {
+    res.json({ status: "alive", message: "Expense Tracker Backend is Running!" });
+});
 
 // 2. DATABASE POOL (Handles timeouts automatically)
 const DB_PORT = process.env.MYSQLPORT || 3306;
