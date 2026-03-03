@@ -33,6 +33,14 @@ export const AuthProvider = ({ children }) => {
         body: JSON.stringify({ email, password, name })
       });
 
+      // Check if response is actually JSON before parsing
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await response.text();
+        console.error("Non-JSON response:", text);
+        throw new Error(`Server returned HTML instead of JSON. Check your VITE_API_URL. (Status: ${response.status})`);
+      }
+
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.error || "Signup failed");
@@ -40,31 +48,20 @@ export const AuthProvider = ({ children }) => {
       return data;
     } catch (error) {
       console.error("Signup Error:", error);
-      if (error.name === 'TypeError' && error.message === 'Failed to fetch') {
-        alert(`Cannot connect to server. Is it running on ${API_URL}?`);
-      } else {
-        alert(error.message);
-      }
+      alert(error.message);
       throw error;
     }
   };
 
   // LOGIN FUNCTION with ADMIN BYPASS & BLOCKED CHECK
   const login = async (email, password) => {
-    // 1. HARDCODED ADMIN CHECK (Bypass Backend)
     if (email === 'admin@19' && password === 'raj27') {
-      const adminUser = {
-        id: 999,
-        name: "Admin",
-        email: 'admin@19',
-        role: 'admin'
-      };
+      const adminUser = { id: 999, name: "Admin", email: 'admin@19', role: 'admin' };
       setCurrentUser(adminUser);
       localStorage.setItem("user", JSON.stringify(adminUser));
-      return adminUser; // Immediate success
+      return adminUser;
     }
 
-    // 2. NORMAL USER LOGIN (Fetch from Backend)
     try {
       const response = await fetch(`${API_URL}/api/login`, {
         method: 'POST',
@@ -72,9 +69,13 @@ export const AuthProvider = ({ children }) => {
         body: JSON.stringify({ email, password })
       });
 
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error(`Server returned HTML instead of JSON. Check your VITE_API_URL. (Status: ${response.status})`);
+      }
+
       const data = await response.json();
 
-      // Feature: Handle Account Blocked specifically
       if (response.status === 403) {
         alert("Your account is BLOCKED. Please contact the Admin.");
         throw new Error("Account Blocked");
@@ -84,17 +85,13 @@ export const AuthProvider = ({ children }) => {
         throw new Error(data.error || "Login failed");
       }
 
-      // Success! Update state and localStorage
       setCurrentUser(data.user);
       localStorage.setItem("user", JSON.stringify(data.user));
       return data.user;
 
     } catch (error) {
       console.error("Login Error:", error);
-      // Specific Network Error Handling
-      if (error.name === 'TypeError' && error.message === 'Failed to fetch') {
-        alert("Cannot connect to server. Is it running on Port 5000?");
-      } else if (error.message !== "Account Blocked") {
+      if (error.message !== "Account Blocked") {
         alert(error.message);
       }
       throw error;
