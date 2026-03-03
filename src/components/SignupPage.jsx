@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from "framer-motion";
-import { FaEnvelope, FaLock, FaTimes } from "react-icons/fa";
+import { FaEnvelope, FaLock, FaTimes, FaWallet } from "react-icons/fa";
 
 const SignupPage = () => {
   const emailRef = useRef();
@@ -42,6 +42,14 @@ const SignupPage = () => {
 
       {/* Background Overlay */}
       <div className="absolute inset-0 bg-black/50 backdrop-blur-[4px] z-1"></div>
+
+      {/* Project Name Logo */}
+      <div className="absolute top-8 left-10 z-20 flex items-center gap-3">
+        <div className="bg-white/20 p-2 rounded-xl backdrop-blur-md border border-white/30 shadow-xl">
+          <FaWallet className="text-white text-2xl" />
+        </div>
+        <span className="text-white text-2xl font-black tracking-tighter uppercase drop-shadow-lg">Money Tracker</span>
+      </div>
 
       {/* Signup Card Container */}
       <div className="flex-1 flex items-center justify-center relative z-10 p-4">
