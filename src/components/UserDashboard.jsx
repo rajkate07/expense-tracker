@@ -13,7 +13,7 @@ const UserDashboard = () => {
         balance, income, expense, transactions,
         newTransaction, handleInputChange,
         handleAddTransaction, deleteTransaction,
-        serverError // New state from context
+        serverError, categories // Added categories
     } = useTransaction();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -229,12 +229,11 @@ const UserDashboard = () => {
                                             className="w-full bg-slate-800 border-none rounded-2xl py-3 px-4 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                                         >
                                             <option value="Other">Other</option>
-                                            <option value="Food">Food</option>
-                                            <option value="Transport">Transport</option>
-                                            <option value="Shopping">Shopping</option>
-                                            <option value="Health">Health</option>
-                                            <option value="Education">Education</option>
-                                            <option value="Entertainment">Entertainment</option>
+                                            {categories.map(cat => (
+                                                <option key={cat.id} value={cat.name}>
+                                                    {cat.name}
+                                                </option>
+                                            ))}
                                         </select>
                                     </div>
                                     <button

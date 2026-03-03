@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTransaction } from '../context/TransactionContext';
 
 const AddTransactionModal = ({ isOpen, onClose }) => {
-    const { handleInputChange, newTransaction, handleAddTransaction } = useTransaction();
+    const { handleInputChange, newTransaction, handleAddTransaction, categories } = useTransaction();
     const [localLoading, setLocalLoading] = useState(false);
 
     const onSubmit = async (e) => {
@@ -110,14 +110,12 @@ const AddTransactionModal = ({ isOpen, onClose }) => {
                                             onChange={handleInputChange}
                                             className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 focus:ring-2 focus:ring-blue-500 outline-none transition-all font-medium appearance-none cursor-pointer"
                                         >
-                                            <option value="Other" className="bg-slate-900">Other</option>
-                                            <option value="Food" className="bg-slate-900">Food</option>
-                                            <option value="Transport" className="bg-slate-900">Transport</option>
-                                            <option value="Shopping" className="bg-slate-900">Shopping</option>
-                                            <option value="Health" className="bg-slate-900">Health</option>
-                                            <option value="Education" className="bg-slate-900">Education</option>
-                                            <option value="Entertainment" className="bg-slate-900">Entertainment</option>
-                                            <option value="Investing" className="bg-slate-900">Investing</option>
+                                            <option value="Other" className="bg-slate-900 text-white">Other</option>
+                                            {categories.map(cat => (
+                                                <option key={cat.id} value={cat.name} className="bg-slate-900 text-white">
+                                                    {cat.name}
+                                                </option>
+                                            ))}
                                         </select>
                                     </div>
                                 </div>

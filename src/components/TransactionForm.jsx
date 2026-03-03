@@ -134,7 +134,7 @@ import React from 'react';
 import { useTransaction } from '../context/TransactionContext';
 
 const TransactionForm = () => {
-  const { newTransaction, handleInputChange, handleAddTransaction, handleQuickAdd } = useTransaction();
+  const { newTransaction, handleInputChange, handleAddTransaction, handleQuickAdd, categories } = useTransaction();
 
   return (
     <section className="bg-white rounded-lg shadow-md p-4 mb-6">
@@ -181,7 +181,7 @@ const TransactionForm = () => {
           <option value="expense">Expense</option>
           <option value="income">Income</option>
         </select>
-        
+
         {/* New: Category dropdown */}
         <select
           name="category"
@@ -190,11 +190,11 @@ const TransactionForm = () => {
           className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="Other">Other</option>
-          <option value="Food">Food</option>
-          <option value="Travel">Travel</option>
-          <option value="Utilities">Utilities</option>
-          <option value="Shopping">Shopping</option>
-          <option value="Salary">Salary</option>
+          {categories.map(cat => (
+            <option key={cat.id} value={cat.name}>
+              {cat.name}
+            </option>
+          ))}
         </select>
 
         <button

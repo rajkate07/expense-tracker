@@ -32,6 +32,7 @@ const Toast = ({ message, type, onClose }) => (
 
 export function TransactionProvider({ children }) {
   const [transactions, setTransactions] = useState([]);
+  const [categories, setCategories] = useState([]);
   const { currentUser } = useAuth();
   const [toast, setToast] = useState(null);
 
@@ -70,8 +71,21 @@ export function TransactionProvider({ children }) {
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/categories`);
+      if (response.ok) {
+        const data = await response.json();
+        setCategories(data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch categories:", error);
+    }
+  };
+
   useEffect(() => {
     fetchTransactions();
+    fetchCategories();
     const interval = setInterval(fetchTransactions, 15000); // Background refresh
     return () => clearInterval(interval);
   }, [currentUser]);
@@ -140,6 +154,7 @@ export function TransactionProvider({ children }) {
 
   const value = {
     balance, income, expense, transactions,
+    categories, fetchCategories,
     newTransaction, handleInputChange,
     handleAddTransaction, deleteTransaction,
     serverError
