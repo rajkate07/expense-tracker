@@ -17,14 +17,15 @@ const dbConfig = {
     host: process.env.MYSQLHOST || 'localhost',
     user: process.env.MYSQLUSER || 'root',
     password: process.env.MYSQLPASSWORD || 'raj@2004',
-    database: process.env.MYSQLDATABASE || 'expense_tracker',
+    database: process.env.MYSQLDATABASE || 'railway', // Try 'railway' as fallback for Railway default
     port: process.env.MYSQLPORT || 3306,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
 };
 
-console.log(`📡 Connecting to MySQL at ${dbConfig.host}:${dbConfig.port} using database: ${dbConfig.database}`);
+console.log(`📡 Attempting connection to ${dbConfig.host}:${dbConfig.port}`);
+console.log(`📂 Target Database: ${dbConfig.database}`);
 
 const db = mysql.createPool(dbConfig);
 
