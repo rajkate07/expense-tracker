@@ -13,21 +13,28 @@ app.use(cors({
 app.use(bodyParser.json());
 
 // 2. DATABASE POOL (Handles timeouts automatically)
-const dbConfig = {
+console.log("🛠️ Environment Check:", {
+    HOST: process.env.MYSQLHOST ? '✅ Set' : '❌ NOT SET (using localhost)',
+    DB: process.env.MYSQLDATABASE ? '✅ Set' : '❌ NOT SET',
+    USER: process.env.MYSQLUSER ? '✅ Set' : '❌ NOT SET',
+    PORT: process.env.MYSQLPORT ? '✅ Set' : '❌ NOT SET'
+});
+
+const poolConfig = process.env.MYSQL_URL ? process.env.MYSQL_URL : {
     host: process.env.MYSQLHOST || 'localhost',
     user: process.env.MYSQLUSER || 'root',
     password: process.env.MYSQLPASSWORD || 'raj@2004',
-    database: process.env.MYSQLDATABASE || 'railway', // Try 'railway' as fallback for Railway default
+    database: process.env.MYSQLDATABASE || 'railway',
     port: process.env.MYSQLPORT || 3306,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
 };
 
-console.log(`📡 Attempting connection to ${dbConfig.host}:${dbConfig.port}`);
-console.log(`📂 Target Database: ${dbConfig.database}`);
+console.log(`📡 Database Connecting via: ${process.env.MYSQL_URL ? 'MYSQL_URL' : 'Config Object'}`);
+if (!process.env.MYSQL_URL) console.log(`👉 Host: ${poolConfig.host}:${poolConfig.port}, DB: ${poolConfig.database}`);
 
-const db = mysql.createPool(dbConfig);
+const db = mysql.createPool(poolConfig);
 
 // Logs for requests
 app.use((req, res, next) => {
