@@ -28,12 +28,20 @@ const SignupPage = () => {
   };
 
   return (
-    <div
-      className="min-h-screen w-full flex flex-col relative overflow-hidden bg-cover bg-center bg-no-repeat font-sans"
-      style={{ backgroundImage: "url('/bull_bg.png')" }}
-    >
+    <div className="min-h-screen w-full flex flex-col relative overflow-hidden font-sans">
+      {/* Background Video */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover z-0"
+      >
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-form-of-blue-and-purple-colors-2330-large.mp4" type="video/mp4" />
+      </video>
+
       {/* Background Overlay */}
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-[4px] z-1"></div>
 
       {/* Signup Card Container */}
       <div className="flex-1 flex items-center justify-center relative z-10 p-4">
