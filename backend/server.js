@@ -13,27 +13,34 @@ app.use(cors({
 app.use(bodyParser.json());
 
 // 2. DATABASE POOL (Handles timeouts automatically)
+const DB_PORT = process.env.MYSQLPORT || 3306;
+const isWrongPort = (DB_PORT == 5000 || DB_PORT == 8080 || DB_PORT == process.env.PORT);
+
 console.log("🛠️ Environment Check:", {
-    HOST: process.env.MYSQLHOST ? '✅ Set' : '❌ NOT SET (using localhost)',
+    HOST: process.env.MYSQLHOST ? '✅ Set' : '❌ NOT SET',
     DB: process.env.MYSQLDATABASE ? '✅ Set' : '❌ NOT SET',
     USER: process.env.MYSQLUSER ? '✅ Set' : '❌ NOT SET',
-    PORT: process.env.MYSQLPORT ? '✅ Set' : '❌ NOT SET'
+    MYSQL_PORT: DB_PORT,
+    SERVER_PORT: process.env.PORT || 5000
 });
+
+if (isWrongPort && !process.env.MYSQL_URL) {
+    console.log("⚠️ Warning: MYSQLPORT looks like a Server Port. Using 3306 as safety fallback.");
+}
 
 const poolConfig = process.env.MYSQL_URL ? process.env.MYSQL_URL : {
     host: process.env.MYSQLHOST || 'localhost',
     user: process.env.MYSQLUSER || 'root',
     password: process.env.MYSQLPASSWORD || 'raj@2004',
     database: process.env.MYSQLDATABASE || 'railway',
-    port: process.env.MYSQLPORT || 3306,
+    port: isWrongPort ? 3306 : DB_PORT,
     waitForConnections: true,
     connectionLimit: 10,
-    queueLimit: 0
+    queueLimit: 0,
+    connectTimeout: 10000 // 10 seconds
 };
 
-console.log(`📡 Database Connecting via: ${process.env.MYSQL_URL ? 'MYSQL_URL' : 'Config Object'}`);
-if (!process.env.MYSQL_URL) console.log(`👉 Host: ${poolConfig.host}:${poolConfig.port}, DB: ${poolConfig.database}`);
-
+console.log(`📡 Database Connecting to: ${poolConfig.host}:${poolConfig.port}`);
 const db = mysql.createPool(poolConfig);
 
 // Logs for requests
