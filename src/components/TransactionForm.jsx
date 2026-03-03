@@ -134,7 +134,11 @@ import React from 'react';
 import { useTransaction } from '../context/TransactionContext';
 
 const TransactionForm = () => {
-  const { newTransaction, handleInputChange, handleAddTransaction, handleQuickAdd, categories } = useTransaction();
+  const { newTransaction, handleInputChange, handleAddTransaction, handleQuickAdd, categories, fetchCategories } = useTransaction();
+
+  React.useEffect(() => {
+    fetchCategories();
+  }, []);
 
   return (
     <section className="bg-white rounded-lg shadow-md p-4 mb-6">

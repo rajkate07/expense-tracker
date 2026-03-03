@@ -4,8 +4,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTransaction } from '../context/TransactionContext';
 
 const AddTransactionModal = ({ isOpen, onClose }) => {
-    const { handleInputChange, newTransaction, handleAddTransaction, categories } = useTransaction();
+    const { handleInputChange, newTransaction, handleAddTransaction, categories, fetchCategories } = useTransaction();
     const [localLoading, setLocalLoading] = useState(false);
+
+    React.useEffect(() => {
+        if (isOpen) {
+            fetchCategories();
+        }
+    }, [isOpen]);
 
     const onSubmit = async (e) => {
         e.preventDefault();

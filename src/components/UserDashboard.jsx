@@ -13,7 +13,7 @@ const UserDashboard = () => {
         balance, income, expense, transactions,
         newTransaction, handleInputChange,
         handleAddTransaction, deleteTransaction,
-        serverError, categories // Added categories
+        serverError, categories, fetchCategories // Added fetchCategories
     } = useTransaction();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -73,7 +73,10 @@ const UserDashboard = () => {
                             {balance < 0 ? '-' : ''}{formatINR(balance)}
                         </p>
                         <button
-                            onClick={() => setIsModalOpen(true)}
+                            onClick={() => {
+                                fetchCategories();
+                                setIsModalOpen(true);
+                            }}
                             className="bg-white text-blue-700 font-bold py-3 px-6 rounded-2xl flex items-center gap-2 hover:bg-blue-50 transition-colors shadow-lg"
                         >
                             <FaPlus /> Quick Add
